@@ -16,6 +16,16 @@ def check_exclusions():
         conn.close()
         sys.exit(1) # Exit the script with an error status
 
+    # Second, check if the 'providers' table is empty.
+    cursor.execute("SELECT COUNT(*) FROM providers")
+    if cursor.fetchone()[0] == 0:
+        print("[!] WARNING: The 'providers' table exists but is empty.")
+        print("[*] No providers were checked against the exclusion list.")
+        print("[*] You must populate the 'providers' table with your own provider data to perform a check.")
+        print("[*] Please see the 'Prepare the Provider Database' section in README.md for instructions.")
+        conn.close()
+        sys.exit(0) # Exit gracefully
+
     # This query joins your providers table with the new exclusions table
     # It looks for matches based on the NPI number
     query = """

@@ -10,7 +10,21 @@ GA_FILE = "Department of Community health Office Of Inspector General List of Ex
 def process_exclusions():
     # Ensure database exists/connects
     conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
     
+    # Create the 'providers' table if it doesn't already exist.
+    # This sets up the necessary structure for the user to populate their own provider data.
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS providers (
+        npi TEXT PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        organization_name TEXT,
+        status TEXT NOT NULL
+    );
+    """)
+    conn.commit()
+
     # ---------------------------------------------------------
     # 1. PROCESS FEDERAL LEIE DATA (UPDATED.csv)
     # ---------------------------------------------------------

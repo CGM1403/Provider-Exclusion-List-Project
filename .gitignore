@@ -1,0 +1,13 @@
+# Python virtual environments
+.venv/
+venv/
+
+# Databases
+*.db
+providers.db
+
+# Raw Data Downloads
+*.csv
+*.xlsx
+*.zip
+data/

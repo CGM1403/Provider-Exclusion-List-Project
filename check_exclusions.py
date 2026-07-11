@@ -1,9 +1,21 @@
 import sqlite3
 import pandas as pd
+import sys
 
 def check_exclusions():
     conn = sqlite3.connect("providers.db")
+    cursor = conn.cursor()
     
+    # First, check if the 'providers' table actually exists in the database.
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='providers'")
+    if cursor.fetchone() is None:
+        print("[!] ERROR: The 'providers' table was not found in the database (providers.db).")
+        print("[*] The 'ingest_exclusions.py' script only creates the 'exclusions' table.")
+        print("[*] You must create and populate the 'providers' table with your own provider data before running this check.")
+        print("[*] Please see the 'Prepare the Provider Database' section in README.md for instructions.")
+        conn.close()
+        sys.exit(1) # Exit the script with an error status
+
     # This query joins your providers table with the new exclusions table
     # It looks for matches based on the NPI number
     query = """
@@ -30,7 +42,7 @@ def check_exclusions():
     else:
         print("[*] No active providers found on the exclusion list.")
         
-    conn.close()
+    conn.close() # Connection is closed in all paths
 
 if __name__ == "__main__":
     check_exclusions()
